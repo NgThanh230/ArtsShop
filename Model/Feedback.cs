@@ -2,10 +2,11 @@
 {
     public class Feedback
     {
-        public int FeedbackId { get; set; }             // ID phản hồi
-        public int CustomerId { get; set; }             // ID khách hàng
-        public string Comments { get; set; }            // Nội dung phản hồi
-        public DateTime Date { get; set; }              // Ngày gửi phản hồi
+        public int Id { get; set; }                  // ID của phản hồi
+        public string CustomerId { get; set; }       // ID của khách hàng
+        public string Message { get; set; }           // Nội dung phản hồi
+        public DateTime CreatedAt { get; set; }       // Ngày tạo phản hồi
     }
+
 
 }

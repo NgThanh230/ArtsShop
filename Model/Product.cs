@@ -1,7 +1,11 @@
-﻿namespace ArtsShop.Model
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace ArtsShop.Model
 {
     public class Product
     {
+        [Required]
         public string ProductId { get; set; }           // 7 ký tự (2 chữ mã sản phẩm + 5 chữ số)
         public string Name { get; set; }                // Tên sản phẩm
         public string Description { get; set; }         // Mô tả sản phẩm
