@@ -1,0 +1,6 @@
+@ArtsShop_HostAddress = http://localhost:5096
+
+GET {{ArtsShop_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
