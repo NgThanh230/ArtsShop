@@ -1,61 +1,86 @@
 ﻿using ArtsShop.Data;
-using ArtsShop.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtsShop.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using ArtsShop.Model.Product;
+    using Microsoft.AspNetCore.Authorization;
+
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : Controller
+    public class ProductsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ArtShopDbContext _context;
 
-        public ProductController(AppDbContext context)
+        public ProductsController(ArtShopDbContext context)
         {
             _context = context;
         }
-        // 1. GET: api/Product (Lấy danh sách tất cả sản phẩm)
+
+        // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
-        // 2. GET: api/Product/5 (Lấy một sản phẩm cụ thể)
+        // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(string id)
+
+        public async Task<IActionResult> GetProductById(int id)
         {
             var product = await _context.Products.FindAsync(id);
-
             if (product == null)
             {
                 return NotFound();
             }
 
-            return product;
+            return Ok(product);
         }
 
-        // 3. POST: api/Product (Thêm mới một sản phẩm)
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Product>>> SearchProducts(string keyword)
         {
-            if (_context.Products.Any(p => p.ProductId == product.ProductId))
+            if (string.IsNullOrWhiteSpace(keyword))
             {
-                return Conflict("Product with the same ProductId already exists.");
+                return BadRequest("Search keyword cannot be empty.");
             }
 
+            var products = await _context.Products
+                .Where(p => p.Title.Contains(keyword) ||
+                             p.Sumary.Contains(keyword) ||
+                             p.Content.Contains(keyword))
+                .ToListAsync();
+
+            if (!products.Any())
+            {
+                return NotFound("No products found matching the search criteria.");
+            }
+
+            return Ok(products);
+        }
+        // POST: api/Products
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.ProductId }, product);
+            return CreatedAtAction(nameof(GetProducts), new { id = product.Id }, product);
         }
 
-        // 4. PUT: api/Product/5 (Cập nhật thông tin sản phẩm)
+        // PUT: api/Products/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(string id, Product product)
+        public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
-            if (id != product.ProductId)
+            if (id != product.Id)
             {
                 return BadRequest();
             }
@@ -81,9 +106,11 @@ namespace ArtsShop.Controllers
             return NoContent();
         }
 
-        // 5. DELETE: api/Product/5 (Xóa sản phẩm)
+
+        // DELETE: api/Products/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(string id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -97,9 +124,11 @@ namespace ArtsShop.Controllers
             return NoContent();
         }
 
-        private bool ProductExists(string id)
+
+        private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return _context.Products.Any(e => e.Id == id);
         }
     }
+
 }
