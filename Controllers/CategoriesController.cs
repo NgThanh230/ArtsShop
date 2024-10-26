@@ -1,9 +1,10 @@
 ﻿using ArtsShop.Data;
+using ArtsShop.Model;
 using ArtsShop.Model.Product;
 using ArtsShop.Model.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace ArtsShop.Controllers
 {
@@ -19,38 +20,65 @@ namespace ArtsShop.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateCategory([FromBody] Category category)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Category category)
         {
-            var result = await _categoryService.Create(category);
-            return result.Success ? Ok(result) : BadRequest(result);
+            if (category == null)
+            {
+                return BadRequest(new Response<Category>(false, "Invalid category data", null));
+            }
+
+            var response = await _categoryService.Create(category);
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return CreatedAtAction(nameof(GetAll), new { id = category.Id }, response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category category)
+        public async Task<IActionResult> Update(int id, [FromBody] Category category)
         {
-            var result = await _categoryService.Update(id, category);
-            return result.Success ? Ok(result) : NotFound(result);
-        }
+            if (category == null)
+            {
+                return BadRequest(new Response<Category>(false, "Invalid category data", null));
+            }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
-        {
-            var result = await _categoryService.GetById(id);
-            return result.Success ? Ok(result) : NotFound(result);
+            var response = await _categoryService.Update(id, category);
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _categoryService.GetAll();
-            return Ok(result);
+            var response = await _categoryService.GetAll();
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response); // Trả về Bad Request nếu không thành công
+            }
+
+            return Ok(response); // Trả về 200 OK với dữ liệu
         }
-        [HttpGet("type/{type}")]
-        public async Task<IActionResult> GetCategoriesByType(string type)
+        [HttpGet("byType/{type}")]
+        public async Task<IActionResult> GetByType(string type)
         {
-            var result = await _categoryService.GetByType(type);
-            return Ok(result);
+            var response = await _categoryService.GetByType(type);
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response); // Trả về Bad Request nếu không thành công
+            }
+
+            return Ok(response); // Trả về 200 OK với dữ liệu
         }
     }
 }

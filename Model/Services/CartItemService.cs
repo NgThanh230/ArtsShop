@@ -20,7 +20,7 @@ namespace ArtsShop.Model.Services
                 ProductId = cartItemDto.ProductId,
                 CartId = cartItemDto.CartId,
                 Quantity = cartItemDto.Quantity,
-                Price = cartItemDto.Price,
+                Price = (decimal)cartItemDto.Price,
                 Discount = cartItemDto.Discount,
                 Image = cartItemDto.Image
             };
@@ -41,7 +41,7 @@ namespace ArtsShop.Model.Services
             cartItem.ProductId = cartItemDto.ProductId;
             cartItem.CartId = cartItemDto.CartId;
             cartItem.Quantity = cartItemDto.Quantity;
-            cartItem.Price = cartItemDto.Price;
+            cartItem.Price = (decimal)cartItemDto.Price;
             cartItem.Discount = cartItemDto.Discount;
             cartItem.Image = cartItemDto.Image;
 

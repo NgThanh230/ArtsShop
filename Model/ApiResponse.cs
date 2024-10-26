@@ -2,23 +2,20 @@
 
 namespace ArtsShop.Model
 {
-    public class ApiResponse<T>
+    public class Response
     {
         public bool Success { get; set; }
-        public int? ErrorCode { get; set; }
         public string Message { get; set; }
-        public T Data { get; set; }
+        public object Data { get; set; }
 
-        public ApiResponse(bool success, int? errorCode, string message, T data)
+        public static Response success(string message, object data = null)
         {
-            Success = success;
-            ErrorCode = errorCode;
-            Message = message;
-            Data = data;
+            return new Response { Success = true, Message = message, Data = data };
         }
 
-        public ApiResponse(bool v1, object value, string v2, List<Category> categories)
+        public static Response Failure(string message, object data = null)
         {
+            return new Response { Success = false, Message = message, Data = data };
         }
     }
 }

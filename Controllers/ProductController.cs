@@ -65,7 +65,7 @@ namespace ArtsShop.Controllers
             return Ok(products);
         }
         // POST: api/Products
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
@@ -76,7 +76,7 @@ namespace ArtsShop.Controllers
         }
 
         // PUT: api/Products/5
-        [Authorize(Roles = "Admin")]
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
@@ -108,7 +108,7 @@ namespace ArtsShop.Controllers
 
 
         // DELETE: api/Products/5
-        [Authorize(Roles = "Admin")]
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

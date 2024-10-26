@@ -3,7 +3,6 @@ using ArtsShop.Model.DTO;
 using ArtsShop.Model.Profile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PayPalCheckoutSdk.Orders;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,7 +21,7 @@ namespace ArtsShop.Model.Services
         public async Task<bool> Register(UserRegistrationDto registrationDto)
         {
             // Check if user already exists
-            var existingUser = await _context.Users.SingleAsync(u => u.Email == registrationDto.Email);
+            var existingUser = await _context.Users.SingleOrDefaultAsync(u => u.Email == registrationDto.Email);
             if (existingUser != null) return false;
 
             // Hash the password
@@ -81,10 +80,11 @@ namespace ArtsShop.Model.Services
             var claims = new[]
             {
         new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-        new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+        new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
+        new Claim(ClaimTypes.Role, user.Role)
     };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKeyHere"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mySuperSecretKeyThatIsAtLeast32CharactersLong"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

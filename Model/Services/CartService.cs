@@ -16,27 +16,27 @@ namespace ArtsShop.Model.Services
             _context = context;
         }
 
-        public async Task<ApiResponse<Cart>> CreateCart(Cart cart)
+        public async Task<Response<Cart>> CreateCart(Cart cart)
         {
             // Kiểm tra xem giỏ hàng có tồn tại không
-            var existingCart = await _context.Cart.FirstOrDefaultAsync(c => c.UserId == cart.UserId);
+            var existingCart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == cart.UserId);
             if (existingCart != null)
             {
-                return new ApiResponse<Cart> (true, null, "Giỏ hàng đã tồn tại.", existingCart);
+                return new Response<Cart> (true, "Giỏ hàng đã tồn tại.", existingCart);
             }
 
-            _context.Cart.Add(cart);
+            _context.Carts.Add(cart);
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<Cart> (true, null,  "Tạo giỏ hàng thành công.", cart );
+            return new Response<Cart> (true,  "Tạo giỏ hàng thành công.", cart );
         }
 
-        public async Task<ApiResponse<Cart>> UpdateCart(int id, Cart cart)
+        public async Task<Response<Cart>> UpdateCart(int id, Cart cart)
         {
-            var existingCart = await _context.Cart.FindAsync(id);
+            var existingCart = await _context.Carts.FindAsync(id);
             if (existingCart == null)
             {
-                return new ApiResponse<Cart> ( false,null, "Giỏ hàng không tồn tại.",null);
+                return new Response<Cart> ( false,  "Giỏ hàng không tồn tại.",null);
             }
 
             // Cập nhật thông tin
@@ -48,32 +48,32 @@ namespace ArtsShop.Model.Services
 
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<Cart> (true,null, "Cập nhật giỏ hàng thành công.", existingCart );
+            return new Response<Cart> (true, "Cập nhật giỏ hàng thành công.", existingCart );
         }
 
-        public async Task<ApiResponse<Cart>> GetCart(int id)
+        public async Task<Response<Cart>> GetCart(int id)
         {
-            var cart = await _context.Cart.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
+            var cart = await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.Id == id);
             if (cart == null)
             {
-                return new ApiResponse<Cart> (false, null, "Giỏ hàng không tồn tại.", null);
+                return new Response<Cart> (false  , "Giỏ hàng không tồn tại.", null);
             }
 
-            return new ApiResponse<Cart> (true, null, "", cart);
+            return new Response<Cart> (true, "", cart);
         }
 
-        public async Task<ApiResponse<Cart>> CleanCart(int id)
+        public async Task<Response<Cart>> CleanCart(int id)
         {
-            var cart = await _context.Cart.FindAsync(id);
+            var cart = await _context.Carts.FindAsync(id);
             if (cart == null)
             {
-                return new ApiResponse<Cart> (false, null, "Giỏ hàng không tồn tại.", null);
+                return new Response<Cart> (false,  "Giỏ hàng không tồn tại.", null);
             }
 
-            _context.Cart.Remove(cart);
+            _context.Carts.Remove(cart);
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<Cart> (true, null, "Đã xóa giỏ hàng.", null);
+            return new Response<Cart> (true, "Đã xóa giỏ hàng.", null);
         }
     }
 }

@@ -24,6 +24,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<CartItemService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<OrderItemService>();
 // C?u hình JWT
 builder.Services.AddAuthentication(options =>
 {
@@ -43,7 +45,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin")); // Chính sách cho Admin
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("Customer")); // Chính sách cho User
+});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",

@@ -16,7 +16,7 @@ namespace ArtsShop.Model.Product
         public int? PaymentMethod { get; set; }
 
         // Có thể có một danh sách các sản phẩm trong giỏ hàng
-        public List<CartItem> Items { get; set; }
+        public List<CartItem> CartItems { get; set; }
     }
 
 
