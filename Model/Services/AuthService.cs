@@ -64,13 +64,15 @@ namespace ArtsShop.Model.Services
 
             // Generate the JWT token
             var token = GenerateJwtToken(user);
-
+            var cart = await _context.Carts
+     .FirstOrDefaultAsync(c => c.UserId == user.Id);
             // Return successful login response
             return new LoginResponseDto
             {
                 Success = true,
                 User = user,
                 AccessToken = token,
+                Cart = cart, 
                 RefreshToken = user.RefreshToken // You might want to handle refresh tokens as well
             };
         }
