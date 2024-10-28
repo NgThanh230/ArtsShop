@@ -1,11 +1,13 @@
 ﻿using ArtsShop.Model.DTO;
 using ArtsShop.Model.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtsShop.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CartItemController : ControllerBase
     {
         private readonly CartItemService _service;

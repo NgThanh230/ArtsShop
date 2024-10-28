@@ -31,19 +31,5 @@ namespace ArtsShop.Controllers
             var result = await _authService.Login(loginDto);
             return result.Success ? Ok(result) : BadRequest(result);
         }
-
-        [HttpGet("logout")]
-        [Authorize]
-        public async Task<IActionResult> Logout()
-        {
-            // Get the user ID from the claims
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null) return BadRequest("Invalid user ID");
-
-            var result = await _authService.Logout(int.Parse(userIdClaim.Value));
-            return result ? Ok(new { success = true, message = "Logged out successfully" })
-                          : BadRequest("Logout failed");
-        }
-
     }
 }

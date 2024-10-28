@@ -7,6 +7,7 @@ namespace ArtsShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;

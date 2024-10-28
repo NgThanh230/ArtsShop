@@ -283,7 +283,6 @@ namespace ArtsShop.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -299,7 +298,6 @@ namespace ArtsShop.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
@@ -325,13 +323,11 @@ namespace ArtsShop.Migrations
 
             modelBuilder.Entity("ArtsShop.Model.Product.OrderItem", b =>
                 {
-                    b.HasOne("ArtsShop.Model.Product.Order", "Order")
+                    b.HasOne("ArtsShop.Model.Product.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ArtsShop.Model.Product.Cart", b =>

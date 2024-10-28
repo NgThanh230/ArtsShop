@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtsShop.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtsShop.Migrations
 {
     [DbContext(typeof(ArtShopDbContext))]
-    [Migration("20241026072019_init")]
+    [Migration("20241028073421_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -286,7 +286,6 @@ namespace ArtsShop.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -302,7 +301,6 @@ namespace ArtsShop.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
@@ -328,13 +326,11 @@ namespace ArtsShop.Migrations
 
             modelBuilder.Entity("ArtsShop.Model.Product.OrderItem", b =>
                 {
-                    b.HasOne("ArtsShop.Model.Product.Order", "Order")
+                    b.HasOne("ArtsShop.Model.Product.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ArtsShop.Model.Product.Cart", b =>
