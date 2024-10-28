@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtsShop.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -19,7 +18,7 @@ namespace ArtsShop.Controllers
         {
             _categoryService = categoryService;
         }
-
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Category category)
         {
@@ -37,7 +36,7 @@ namespace ArtsShop.Controllers
 
             return CreatedAtAction(nameof(GetAll), new { id = category.Id }, response);
         }
-
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Category category)
         {
